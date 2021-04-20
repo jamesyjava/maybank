@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Get request;
+if (valid endpoint?) then (true)
+    if (Authenticated) then (true)
+        :Query database;
+        :Map response;
+        :Map HTTP Code 200;
+    else (false)
+        :Map HTTP Code 401;
+    endif
+else (false)
+    :Map HTTP Code 404;
+endif
+:Return result;
+stop
+
+@enduml

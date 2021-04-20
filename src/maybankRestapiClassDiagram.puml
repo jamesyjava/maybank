@@ -1,0 +1,48 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Transaction {
+    +id             : int
+    +accountNumber  : string
+    +trx_amount     : double
+    +description    : string
+    +trxDate        : LocalDate
+    +trxTime        : LocalTime
+    +customerId     : int
+}
+
+interface TransactionRepository {
+    +findByCustomerId(customerId: int, pageable: Pageable): Page<Transaction>
+    +findByAccountNumber(accountNumber: string, pageable: Pageable): Page<Transaction>
+    +findByDescription(description: string, pageable: Pageable): Page<Transaction>
+}
+
+class TransactionModelAssembler {
+    +toModel(transaction: Transaction): EntityModel<Transaction>
+    +toModel(transaction: Transaction, pageable: Pageable): EntityModel<Transaction>
+}
+
+class TransactionController {
+    transactionRepository TransactionRepository
+    transactionModelAssembler TransactionModelAssembler
+    pagedResourcesAssembler PagedResourcesAssembler<Transaction>
+
+    +TransactionController(transactionRepository: TransactionRepository, transactionModelAssembler: TransactionModelAssembler)
+    +all(pageable: Pageable): ResponseEntity
+    +findByCustomerId(pageable: Pageable, customerId: int): ResponseEntity
+    +findByAccountNumber(pageable: Pageable, accountNumber: string): ResponseEntity
+    +findByDescription(pageable: Pageable, description: string): ResponseEntity
+    +one(id: long): EntityModel<Transaction>
+}
+
+class TransactionNotFoundException{
+    +TransactionNotFoundException(): void
+    +TransactionNotFoundException(message: string): void
+}
+
+Transaction <|--TransactionRepository
+TransactionNotFoundException <|-- TransactionController
+TransactionModelAssembler <|-- TransactionController
+TransactionRepository <|-- TransactionController
+
+@enduml
