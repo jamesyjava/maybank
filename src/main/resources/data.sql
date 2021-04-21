@@ -9,3 +9,9 @@ CREATE TABLE trx_data (
   trx_time TIME NOT NULL,
   customer_id INT
 );
+
+CREATE INDEX IF NOT EXISTS account_number_idx ON trx_data(account_number);
+
+CREATE INDEX IF NOT EXISTS description_idx ON trx_data(description);
+
+CREATE INDEX IF NOT EXISTS customer_id_idx ON trx_data(customer_id);
